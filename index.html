@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RBX Spoofer — Roblox Asset Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --surface2: #1a1a26;
+    --border: rgba(120,100,255,0.15);
+    --accent: #7c5cfc;
+    --accent2: #c084fc;
+    --glow: rgba(124,92,252,0.4);
+    --text: #f0eeff;
+    --muted: #7a7a9a;
+    --red: #fc5c7c;
+    --green: #5cfcb0;
+    --mono: 'Space Mono', monospace;
+    --display: 'Syne', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--display);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(124,92,252,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(124,92,252,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* Header */
+  header {
+    padding: 48px 0 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .logo-icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    box-shadow: 0 0 24px var(--glow);
+    flex-shrink: 0;
+  }
+
+  .header-text h1 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    background: linear-gradient(90deg, #fff 0%, var(--accent2) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .header-text p {
+    font-size: 13px;
+    color: var(--muted);
+    font-family: var(--mono);
+    margin-top: 2px;
+  }
+
+  /* Badge bar */
+  .badge-bar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 24px 0 40px;
+  }
+
+  .badge {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 100px;
+    border: 1px solid;
+    letter-spacing: 0.5px;
+  }
+
+  .badge.purple { color: var(--accent2); border-color: rgba(192,132,252,0.3); background: rgba(192,132,252,0.07); }
+  .badge.green { color: var(--green); border-color: rgba(92,252,176,0.3); background: rgba(92,252,176,0.07); }
+  .badge.red { color: var(--red); border-color: rgba(252,92,124,0.3); background: rgba(252,92,124,0.07); }
+
+  /* Asset Type Tabs */
+  .tab-label {
+    font-size: 11px;
+    font-family: var(--mono);
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+
+  .tab {
+    padding: 7px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .tab:hover { border-color: var(--accent); color: var(--text); }
+  .tab.active {
+    border-color: var(--accent);
+    background: rgba(124,92,252,0.15);
+    color: #fff;
+    box-shadow: 0 0 12px rgba(124,92,252,0.2);
+  }
+
+  .tab-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--muted);
+  }
+  .tab.active .tab-dot { background: var(--accent2); }
+
+  /* Input area */
+  .input-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+    transition: border-color 0.3s;
+  }
+
+  .input-section:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px rgba(124,92,252,0.2);
+  }
+
+  .input-row {
+    display: flex;
+    gap: 10px;
+    align-items: stretch;
+  }
+
+  .input-wrap {
+    flex: 1;
+    position: relative;
+  }
+
+  .input-prefix {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--accent2);
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  #assetInput {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 13px 14px 13px 168px;
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  #assetInput:focus { border-color: var(--accent); }
+  #assetInput::placeholder { color: var(--muted); }
+
+  .btn-load {
+    padding: 13px 24px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-family: var(--display);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+    box-shadow: 0 4px 20px rgba(124,92,252,0.35);
+  }
+
+  .btn-load:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 28px rgba(124,92,252,0.5);
+  }
+
+  .btn-load:active { transform: translateY(0); }
+
+  .hint-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+  }
+
+  .hint {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .hint span { color: var(--accent2); }
+
+  /* Result area */
+  #resultArea { display: none; }
+
+  .result-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  @media (max-width: 600px) {
+    .result-grid { grid-template-columns: 1fr; }
+  }
+
+  /* Preview card */
+  .preview-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .preview-header {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .preview-header-title {
+    font-size: 12px;
+    font-family: var(--mono);
+    color: var(--muted);
+    letter-spacing: 0.5px;
+  }
+
+  .preview-status {
+    font-size: 11px;
+    font-family: var(--mono);
+    padding: 3px 10px;
+    border-radius: 100px;
+  }
+
+  .status-ok { color: var(--green); background: rgba(92,252,176,0.1); }
+  .status-err { color: var(--red); background: rgba(252,92,124,0.1); }
+
+  .preview-body {
+    position: relative;
+    aspect-ratio: 1;
+    background: repeating-conic-gradient(#1e1e2e 0% 25%, #151520 0% 50%) 0 0 / 20px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .preview-body img {
+    max-width: 100%;
+    max-height: 100%;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  .preview-loader {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .preview-loader.active { display: flex; }
+
+  .spinner {
+    width: 32px;
+    height: 32px;
+    border: 2px solid rgba(124,92,252,0.2);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .loader-text {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  /* Info card */
+  .info-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .info-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .info-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .info-value {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--text);
+    word-break: break-all;
+  }
+
+  .info-value.accent { color: var(--accent2); }
+
+  .info-divider {
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* Action buttons */
+  .action-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+  }
+
+  .btn-action {
+    flex: 1;
+    min-width: 100px;
+    padding: 11px 16px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--text);
+    font-family: var(--display);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    text-decoration: none;
+  }
+
+  .btn-action:hover {
+    border-color: var(--accent);
+    background: rgba(124,92,252,0.12);
+    color: #fff;
+  }
+
+  .btn-action.primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-color: transparent;
+    box-shadow: 0 4px 16px rgba(124,92,252,0.3);
+  }
+
+  .btn-action.primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 24px rgba(124,92,252,0.45);
+  }
+
+  /* Full result area below grid */
+  .spoof-string-box {
+    margin-top: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .ssb-header {
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .ssb-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.5px;
+  }
+
+  .btn-copy {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 4px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--accent2);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-copy:hover { background: rgba(192,132,252,0.1); border-color: var(--accent2); }
+  .btn-copy.copied { color: var(--green); border-color: rgba(92,252,176,0.4); }
+
+  .ssb-content {
+    padding: 16px 18px;
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--accent2);
+    word-break: break-all;
+    line-height: 1.6;
+  }
+
+  /* Error state */
+  .error-box {
+    background: rgba(252,92,124,0.07);
+    border: 1px solid rgba(252,92,124,0.2);
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--red);
+    margin-top: 12px;
+  }
+
+  /* Instructions section */
+  .instructions {
+    margin-top: 48px;
+  }
+
+  .instructions h2 {
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 20px;
+    color: var(--text);
+  }
+
+  .step-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .step {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+  }
+
+  .step-num {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: rgba(124,92,252,0.15);
+    border: 1px solid rgba(124,92,252,0.3);
+    color: var(--accent2);
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .step-body {
+    flex: 1;
+    padding-top: 3px;
+  }
+
+  .step-body strong {
+    font-size: 14px;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 3px;
+  }
+
+  .step-body p {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+    font-family: var(--mono);
+  }
+
+  .step-body code {
+    color: var(--accent2);
+    background: rgba(192,132,252,0.1);
+    padding: 1px 6px;
+    border-radius: 4px;
+  }
+
+  /* Asset type grid */
+  .asset-types {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+    margin-top: 32px;
+  }
+
+  .asset-type-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .asset-type-card:hover {
+    border-color: var(--accent);
+    background: rgba(124,92,252,0.08);
+    transform: translateY(-2px);
+  }
+
+  .atc-icon { font-size: 24px; margin-bottom: 6px; }
+  .atc-name { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+  .atc-id { font-family: var(--mono); font-size: 10px; color: var(--muted); }
+
+  /* Bulk section */
+  .bulk-section {
+    margin-top: 48px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+  }
+
+  .bulk-section h2 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .bulk-section > p {
+    font-size: 13px;
+    color: var(--muted);
+    font-family: var(--mono);
+    margin-bottom: 16px;
+  }
+
+  #bulkInput {
+    width: 100%;
+    height: 120px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text);
+    outline: none;
+    resize: vertical;
+    transition: border-color 0.2s;
+  }
+
+  #bulkInput:focus { border-color: var(--accent); }
+  #bulkInput::placeholder { color: var(--muted); }
+
+  .btn-bulk {
+    margin-top: 12px;
+    padding: 11px 22px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: var(--display);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-bulk:hover { border-color: var(--accent); color: #fff; }
+
+  #bulkResults {
+    margin-top: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .bulk-thumb {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    background: repeating-conic-gradient(#1e1e2e 0% 25%, #151520 0% 50%) 0 0 / 10px 10px;
+    flex-shrink: 0;
+  }
+
+  .bulk-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .bulk-thumb:hover .bulk-overlay { opacity: 1; }
+
+  .bulk-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(124,92,252,0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s;
+    font-size: 20px;
+  }
+
+  footer {
+    margin-top: 64px;
+    padding: 24px 0;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: gap;
+    gap: 12px;
+  }
+
+  footer p { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  footer a { color: var(--accent2); text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <header>
+    <div class="logo-icon">🎮</div>
+    <div class="header-text">
+      <h1>RBX Spoofer</h1>
+      <p>Roblox Asset ID → Preview & Download</p>
+    </div>
+  </header>
+
+  <div class="badge-bar">
+    <span class="badge purple">🖼 Texture / Decal</span>
+    <span class="badge purple">🎵 Sound / Song</span>
+    <span class="badge purple">🧩 MeshPart</span>
+    <span class="badge purple">💃 Animasi</span>
+    <span class="badge green">✓ No Login</span>
+    <span class="badge green">✓ Free Download</span>
+    <span class="badge red">⚡ Instant Preview</span>
+  </div>
+
+  <div class="tab-label">Pilih Tipe Asset</div>
+  <div class="tabs" id="tabs">
+    <div class="tab active" data-type="texture" onclick="setType(this,'texture')">
+      <span class="tab-dot"></span>Texture / Decal
+    </div>
+    <div class="tab" data-type="image" onclick="setType(this,'image')">
+      <span class="tab-dot"></span>Image / Icon
+    </div>
+    <div class="tab" data-type="audio" onclick="setType(this,'audio')">
+      <span class="tab-dot"></span>Song / Audio
+    </div>
+    <div class="tab" data-type="mesh" onclick="setType(this,'mesh')">
+      <span class="tab-dot"></span>MeshPart
+    </div>
+    <div class="tab" data-type="animation" onclick="setType(this,'animation')">
+      <span class="tab-dot"></span>Animasi
+    </div>
+  </div>
+
+  <div class="input-section">
+    <div class="input-row">
+      <div class="input-wrap">
+        <span class="input-prefix">rbxassetid://</span>
+        <input type="text" id="assetInput" placeholder="133631882028270" oninput="handleInput()" onkeydown="if(event.key==='Enter')loadAsset()">
+      </div>
+      <button class="btn-load" onclick="loadAsset()">Preview →</button>
+    </div>
+    <div class="hint-row">
+      <span class="hint">Contoh: <span>133631882028270</span></span>
+      <span class="hint">Atau paste langsung: <span>rbxassetid://133631882028270</span></span>
+    </div>
+  </div>
+
+  <div id="errorBox" style="display:none">
+    <div class="error-box">⚠️ <span id="errorMsg">ID tidak valid atau asset tidak ditemukan.</span></div>
+  </div>
+
+  <div id="resultArea">
+    <div class="result-grid">
+      <div class="preview-card">
+        <div class="preview-header">
+          <span class="preview-header-title">PREVIEW</span>
+          <span class="preview-status status-ok" id="statusBadge">● LOADED</span>
+        </div>
+        <div class="preview-body" id="previewBody">
+          <div class="preview-loader" id="previewLoader">
+            <div class="spinner"></div>
+            <span class="loader-text">Loading asset...</span>
+          </div>
+          <img id="previewImg" src="" alt="Asset Preview" style="display:none" onload="onImgLoad()" onerror="onImgError()">
+          <div id="audioPreview" style="display:none; padding:24px; text-align:center;">
+            <div style="font-size:48px; margin-bottom:16px;">🎵</div>
+            <audio id="audioPlayer" controls style="width:100%; margin-top:8px;"></audio>
+            <p style="font-family:var(--mono); font-size:11px; color:var(--muted); margin-top:8px;">Preview mungkin tidak tersedia untuk semua audio</p>
+          </div>
+          <div id="meshPreview" style="display:none; padding:24px; text-align:center;">
+            <div style="font-size:48px; margin-bottom:12px;">🧩</div>
+            <p style="font-family:var(--mono); font-size:12px; color:var(--muted);">MeshPart tidak bisa di-preview langsung.<br>Gunakan link download di bawah.</p>
+          </div>
+          <div id="animPreview" style="display:none; padding:24px; text-align:center;">
+            <div style="font-size:48px; margin-bottom:12px;">💃</div>
+            <p style="font-family:var(--mono); font-size:12px; color:var(--muted);">Animasi tidak bisa di-preview langsung.<br>Gunakan ID di Roblox Studio.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="info-row">
+          <span class="info-label">Asset ID</span>
+          <span class="info-value accent" id="infoId">—</span>
+        </div>
+        <div class="info-divider"></div>
+        <div class="info-row">
+          <span class="info-label">Tipe</span>
+          <span class="info-value" id="infoType">—</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Format Roblox</span>
+          <span class="info-value" id="infoFormat">—</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Direct URL</span>
+          <span class="info-value" id="infoUrl" style="font-size:11px">—</span>
+        </div>
+        <div class="info-divider"></div>
+        <div class="action-row">
+          <button class="btn-action primary" id="btnDownload" onclick="downloadAsset()">⬇ Download</button>
+          <button class="btn-action" onclick="openRoblox()">🔗 Roblox</button>
+        </div>
+        <button class="btn-action" style="width:100%; margin-top:6px" onclick="copyId()">📋 Copy rbxassetid://</button>
+      </div>
+    </div>
+
+    <div class="spoof-string-box">
+      <div class="ssb-header">
+        <span class="ssb-label">STRING SIAP PAKAI — Paste ke Roblox Studio</span>
+        <button class="btn-copy" id="btnCopyStr" onclick="copySpoofString()">Copy</button>
+      </div>
+      <div class="ssb-content" id="spoofString">—</div>
+    </div>
+  </div>
+
+  <!-- Sample assets -->
+  <div class="asset-types" id="sampleSection">
+    <div class="asset-type-card" onclick="loadSample('133631882028270','texture')">
+      <div class="atc-icon">🖼</div>
+      <div class="atc-name">Sample Texture</div>
+      <div class="atc-id">133631882028270</div>
+    </div>
+    <div class="asset-type-card" onclick="loadSample('9120386436','texture')">
+      <div class="atc-icon">🎨</div>
+      <div class="atc-name">Sample Decal</div>
+      <div class="atc-id">9120386436</div>
+    </div>
+    <div class="asset-type-card" onclick="loadSample('5982471715','audio')">
+      <div class="atc-icon">🎵</div>
+      <div class="atc-name">Sample Audio</div>
+      <div class="atc-id">5982471715</div>
+    </div>
+    <div class="asset-type-card" onclick="loadSample('6895079900','mesh')">
+      <div class="atc-icon">🧩</div>
+      <div class="atc-name">Sample Mesh</div>
+      <div class="atc-id">6895079900</div>
+    </div>
+    <div class="asset-type-card" onclick="loadSample('507770453','animation')">
+      <div class="atc-icon">💃</div>
+      <div class="atc-name">Sample Anim</div>
+      <div class="atc-id">507770453</div>
+    </div>
+  </div>
+
+  <!-- Instructions -->
+  <div class="instructions">
+    <h2>Cara Penggunaan</h2>
+    <div class="step-list">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>Paste Asset ID</strong>
+          <p>Tempel ID seperti <code>133631882028270</code> atau langsung <code>rbxassetid://133631882028270</code> — otomatis terdeteksi.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>Pilih Tipe Asset</strong>
+          <p>Pilih jenis asset: Texture/Decal, Song/Audio, MeshPart, atau Animasi untuk tampilan yang tepat.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>Preview & Download</strong>
+          <p>Preview langsung muncul. Klik <strong>Download</strong> untuk simpan gambar, atau <strong>Copy rbxassetid://</strong> langsung pakai di Studio.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>Copy ke Roblox Studio</strong>
+          <p>String di kotak hijau bawah sudah siap paste ke property <code>Texture</code>, <code>Decal.Texture</code>, <code>Sound.SoundId</code>, atau <code>Animation.AnimationId</code>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bulk section -->
+  <div class="bulk-section">
+    <h2>🗂 Bulk Preview</h2>
+    <p>Paste banyak ID sekaligus, satu per baris</p>
+    <textarea id="bulkInput" placeholder="133631882028270&#10;9120386436&#10;5982471715&#10;..."></textarea>
+    <button class="btn-bulk" onclick="loadBulk()">⚡ Preview Semua</button>
+    <div id="bulkResults"></div>
+  </div>
+
+  <footer>
+    <p>RBX Spoofer · Tidak terafiliasi dengan Roblox Corporation</p>
+    <p>Built with ♥ · <a href="https://create.roblox.com" target="_blank">Roblox Create</a></p>
+  </footer>
+
+</div>
+
+<script>
+let currentType = 'texture';
+let currentId = '';
+
+const CDN_THUMB = id => `https://thumbnails.roblox.com/v1/assets?assetIds=${id}&returnPolicy=PlaceHolder&size=420x420&format=Png&isCircular=false`;
+const CDN_ASSET = id => `https://assetdelivery.roblox.com/v1/asset/?id=${id}`;
+
+function setType(el, type) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  currentType = type;
+  if (currentId) loadAsset();
+}
+
+function handleInput() {
+  const val = document.getElementById('assetInput').value.trim();
+  // auto strip prefix if pasted full string
+  const match = val.match(/rbxassetid:\/\/(\d+)/i);
+  if (match) {
+    document.getElementById('assetInput').value = match[1];
+  }
+}
+
+function loadSample(id, type) {
+  document.getElementById('assetInput').value = id;
+  const tabMap = { texture: 0, image: 1, audio: 2, mesh: 3, animation: 4 };
+  const tabs = document.querySelectorAll('.tab');
+  tabs.forEach(t => t.classList.remove('active'));
+  tabs[tabMap[type] ?? 0].classList.add('active');
+  currentType = type;
+  loadAsset();
+}
+
+function loadAsset() {
+  let raw = document.getElementById('assetInput').value.trim();
+  const match = raw.match(/(\d{5,})/);
+  if (!match) {
+    showError('Masukkan ID yang valid (contoh: 133631882028270)');
+    return;
+  }
+
+  currentId = match[1];
+  hideError();
+  showResult();
+
+  document.getElementById('infoId').textContent = currentId;
+  document.getElementById('infoType').textContent = typeLabel(currentType);
+  document.getElementById('infoFormat').textContent = `rbxassetid://${currentId}`;
+  document.getElementById('infoUrl').textContent = CDN_ASSET(currentId);
+  document.getElementById('spoofString').textContent = getSpoofString(currentType, currentId);
+
+  // Show appropriate preview
+  const previewBody = document.getElementById('previewBody');
+  ['previewImg','audioPreview','meshPreview','animPreview'].forEach(id => {
+    document.getElementById(id).style.display = 'none';
+  });
+  document.getElementById('previewLoader').classList.remove('active');
+  document.getElementById('statusBadge').className = 'preview-status status-ok';
+  document.getElementById('statusBadge').textContent = '● LOADED';
+
+  if (currentType === 'texture' || currentType === 'image') {
+    document.getElementById('previewLoader').classList.add('active');
+    const img = document.getElementById('previewImg');
+    img.style.display = 'none';
+    // Use Roblox thumbnail API (needs CORS proxy for direct use; use img src which is fine)
+    // Direct approach — roblox CDN allows hotlinking images
+    img.src = '';
+    // Try thumbnail first
+    fetchThumbnail(currentId);
+  } else if (currentType === 'audio') {
+    document.getElementById('audioPreview').style.display = 'block';
+    const audio = document.getElementById('audioPlayer');
+    audio.src = CDN_ASSET(currentId);
+  } else if (currentType === 'mesh') {
+    document.getElementById('meshPreview').style.display = 'flex';
+    document.getElementById('meshPreview').style.flexDirection = 'column';
+    document.getElementById('meshPreview').style.alignItems = 'center';
+    document.getElementById('meshPreview').style.justifyContent = 'center';
+    document.getElementById('statusBadge').textContent = '● MESH';
+  } else if (currentType === 'animation') {
+    document.getElementById('animPreview').style.display = 'flex';
+    document.getElementById('animPreview').style.flexDirection = 'column';
+    document.getElementById('animPreview').style.alignItems = 'center';
+    document.getElementById('animPreview').style.justifyContent = 'center';
+    document.getElementById('statusBadge').textContent = '● ANIM';
+  }
+}
+
+async function fetchThumbnail(id) {
+  const img = document.getElementById('previewImg');
+  // Roblox thumbnail API — CORS accessible
+  const url = `https://thumbnails.roblox.com/v1/assets?assetIds=${id}&returnPolicy=PlaceHolder&size=420x420&format=Png&isCircular=false`;
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+    if (data.data && data.data[0] && data.data[0].imageUrl) {
+      img.src = data.data[0].imageUrl;
+      img.style.display = 'block';
+      document.getElementById('previewLoader').classList.remove('active');
+    } else {
+      // fallback to direct
+      img.src = `https://assetdelivery.roblox.com/v1/asset/?id=${id}`;
+      img.style.display = 'block';
+      document.getElementById('previewLoader').classList.remove('active');
+    }
+  } catch(e) {
+    // fallback
+    img.src = `https://assetdelivery.roblox.com/v1/asset/?id=${id}`;
+    img.style.display = 'block';
+    document.getElementById('previewLoader').classList.remove('active');
+  }
+}
+
+function onImgLoad() {
+  document.getElementById('previewLoader').classList.remove('active');
+  document.getElementById('statusBadge').className = 'preview-status status-ok';
+  document.getElementById('statusBadge').textContent = '● LOADED';
+}
+
+function onImgError() {
+  document.getElementById('previewLoader').classList.remove('active');
+  document.getElementById('statusBadge').className = 'preview-status status-err';
+  document.getElementById('statusBadge').textContent = '✕ ERROR';
+}
+
+function getSpoofString(type, id) {
+  switch(type) {
+    case 'texture': return `rbxassetid://${id}`;
+    case 'image':   return `rbxassetid://${id}`;
+    case 'audio':   return `rbxassetid://${id}`;
+    case 'mesh':    return `rbxassetid://${id}`;
+    case 'animation': return `rbxassetid://${id}`;
+    default: return `rbxassetid://${id}`;
+  }
+}
+
+function typeLabel(type) {
+  const map = {
+    texture: 'Texture / Decal',
+    image: 'Image / Icon',
+    audio: 'Song / Audio',
+    mesh: 'MeshPart',
+    animation: 'Animation'
+  };
+  return map[type] || type;
+}
+
+function showResult() {
+  document.getElementById('resultArea').style.display = 'block';
+  document.getElementById('sampleSection').style.display = 'none';
+  document.getElementById('errorBox').style.display = 'none';
+}
+
+function showError(msg) {
+  document.getElementById('errorMsg').textContent = msg;
+  document.getElementById('errorBox').style.display = 'block';
+  document.getElementById('resultArea').style.display = 'none';
+}
+
+function hideError() {
+  document.getElementById('errorBox').style.display = 'none';
+}
+
+async function downloadAsset() {
+  if (!currentId) return;
+  const btn = document.getElementById('btnDownload');
+  btn.textContent = '⏳ Downloading...';
+
+  if (currentType === 'texture' || currentType === 'image') {
+    // Download via thumbnail URL
+    const url = `https://thumbnails.roblox.com/v1/assets?assetIds=${currentId}&returnPolicy=PlaceHolder&size=420x420&format=Png&isCircular=false`;
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+      let imgUrl = '';
+      if (data.data && data.data[0] && data.data[0].imageUrl) {
+        imgUrl = data.data[0].imageUrl;
+      } else {
+        imgUrl = `https://assetdelivery.roblox.com/v1/asset/?id=${currentId}`;
+      }
+      const imgRes = await fetch(imgUrl);
+      const blob = await imgRes.blob();
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `rbx_asset_${currentId}.png`;
+      a.click();
+      btn.textContent = '✓ Downloaded';
+      setTimeout(() => btn.innerHTML = '⬇ Download', 2500);
+    } catch(e) {
+      // fallback open in new tab
+      window.open(`https://assetdelivery.roblox.com/v1/asset/?id=${currentId}`, '_blank');
+      btn.innerHTML = '⬇ Download';
+    }
+  } else {
+    window.open(`https://assetdelivery.roblox.com/v1/asset/?id=${currentId}`, '_blank');
+    btn.innerHTML = '⬇ Download';
+  }
+}
+
+function openRoblox() {
+  window.open(`https://www.roblox.com/catalog/${currentId}`, '_blank');
+}
+
+function copyId() {
+  if (!currentId) return;
+  navigator.clipboard.writeText(`rbxassetid://${currentId}`).then(() => {
+    showToast('Copied: rbxassetid://' + currentId);
+  });
+}
+
+function copySpoofString() {
+  const str = document.getElementById('spoofString').textContent;
+  navigator.clipboard.writeText(str).then(() => {
+    const btn = document.getElementById('btnCopyStr');
+    btn.textContent = '✓ Copied';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.textContent = msg;
+  t.style.cssText = `position:fixed;bottom:24px;right:24px;background:rgba(124,92,252,0.9);color:#fff;padding:12px 20px;border-radius:10px;font-family:var(--mono);font-size:13px;z-index:1000;animation:fadeIn 0.2s;`;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2500);
+}
+
+async function loadBulk() {
+  const lines = document.getElementById('bulkInput').value.split('\n').map(l => l.trim()).filter(Boolean);
+  const container = document.getElementById('bulkResults');
+  container.innerHTML = '';
+
+  for (const line of lines.slice(0, 20)) {
+    const match = line.match(/(\d{5,})/);
+    if (!match) continue;
+    const id = match[1];
+
+    const thumb = document.createElement('div');
+    thumb.className = 'bulk-thumb';
+    thumb.title = `rbxassetid://${id}`;
+
+    const spinner = document.createElement('div');
+    spinner.style.cssText = 'display:flex;align-items:center;justify-content:center;height:100%;';
+    spinner.innerHTML = '<div class="spinner" style="width:20px;height:20px"></div>';
+    thumb.appendChild(spinner);
+
+    const overlay = document.createElement('div');
+    overlay.className = 'bulk-overlay';
+    overlay.textContent = '⬇';
+    thumb.appendChild(overlay);
+
+    thumb.onclick = () => downloadSingle(id);
+    container.appendChild(thumb);
+
+    // Load thumbnail
+    try {
+      const res = await fetch(`https://thumbnails.roblox.com/v1/assets?assetIds=${id}&returnPolicy=PlaceHolder&size=150x150&format=Png&isCircular=false`);
+      const data = await res.json();
+      if (data.data && data.data[0] && data.data[0].imageUrl) {
+        const img = document.createElement('img');
+        img.src = data.data[0].imageUrl;
+        thumb.innerHTML = '';
+        thumb.appendChild(img);
+        thumb.appendChild(overlay);
+      }
+    } catch(e) { /* ignore */ }
+  }
+}
+
+async function downloadSingle(id) {
+  const url = `https://thumbnails.roblox.com/v1/assets?assetIds=${id}&returnPolicy=PlaceHolder&size=420x420&format=Png&isCircular=false`;
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+    if (data.data && data.data[0] && data.data[0].imageUrl) {
+      const imgRes = await fetch(data.data[0].imageUrl);
+      const blob = await imgRes.blob();
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `rbx_${id}.png`;
+      a.click();
+    }
+  } catch(e) {
+    window.open(`https://assetdelivery.roblox.com/v1/asset/?id=${id}`, '_blank');
+  }
+}
+</script>
+
+</body>
+</html>
